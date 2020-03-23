@@ -1,9 +1,11 @@
+
 var renderer;
 var scene, camera;
 var init_complated = false;
 var object_container = {};
 
 var init = function () {
+    
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
@@ -20,13 +22,7 @@ var init = function () {
 }
 
 var init_objects = function(){
-    let geometry = new THREE.BoxGeometry();
-    let material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-    let cube = new THREE.Mesh( geometry, material );
-
-    object_container["cube"] = cube;
-
-    scene.add( cube );
+    scene.add(biliard())
 }
 
 function handleResize() {
@@ -41,10 +37,10 @@ var animate = function () {
     if(!init_complated)
         return;
 
-    let cube = object_container["cube"];
+    //let cube = object_container["cube"];
 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    //cube.rotation.x += 0.01;
+    //cube.rotation.y += 0.01;
 
     renderer.render( scene, camera );
 };
