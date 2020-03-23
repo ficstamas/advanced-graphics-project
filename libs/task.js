@@ -1,6 +1,5 @@
-
 var renderer;
-var scene, camera;
+var scene, camera, controls;
 var init_complated = false;
 var object_container = {};
 
@@ -14,9 +13,14 @@ var init = function () {
     renderer.setClearColor(0x333333)
     document.body.appendChild( renderer.domElement );
 
+
+    controls = new THREE.TrackballControls( camera, renderer.domElement );
+
     window.addEventListener('resize', handleResize, false);
 
-    camera.position.z = 5;
+    camera.position.z = 8;
+    controls.update();
+
     init_objects();
     init_complated = true;
 }
@@ -37,10 +41,7 @@ var animate = function () {
     if(!init_complated)
         return;
 
-    //let cube = object_container["cube"];
-
-    //cube.rotation.x += 0.01;
-    //cube.rotation.y += 0.01;
+    controls.update();
 
     renderer.render( scene, camera );
 };
