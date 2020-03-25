@@ -5,7 +5,6 @@ function createMesh(geom) {
     var wireFrameMat = new THREE.MeshBasicMaterial();
     wireFrameMat.wireframe = true;
     var plane = createMultiMaterialObject(geom, [meshMaterial, wireFrameMat]);
-
     return plane;
 }
 

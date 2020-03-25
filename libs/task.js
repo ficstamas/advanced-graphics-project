@@ -1,5 +1,5 @@
 var renderer;
-var scene, camera, controls;
+var scene, camera, controls, effect;
 var init_complated = false;
 var object_container = {};
 
@@ -10,7 +10,10 @@ var init = function () {
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.shadowMap.enabled = true;
     renderer.setClearColor(0x333333)
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    effect = new OutlineEffect( renderer );
     document.body.appendChild( renderer.domElement );
 
 
@@ -26,6 +29,15 @@ var init = function () {
 }
 
 var init_objects = function(){
+    let directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    directionalLight.position.set( 1, 1, 1 ).normalize();
+    scene.add( directionalLight );
+
+    let pointLight = new THREE.PointLight( 0xffffff, 1, 800 );
+    scene.add( pointLight );
+
+    scene.add(directionalLight)
+    scene.add( new THREE.AmbientLight( 0x111111 ) );
     scene.add(biliard())
 }
 
@@ -43,6 +55,6 @@ var animate = function () {
 
     controls.update();
 
-    renderer.render( scene, camera );
+    effect.render( scene, camera );
 };
 animate();
