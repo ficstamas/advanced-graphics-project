@@ -37,7 +37,7 @@ var init_objects = function(){
     scene.add( pointLight );
 
     scene.add(directionalLight)
-    scene.add( new THREE.AmbientLight( 0x111111 ) );
+    scene.add( new THREE.AmbientLight( 0xffffff ) );
     scene.add(biliard())
 }
 
