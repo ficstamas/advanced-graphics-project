@@ -38,7 +38,12 @@ var init_objects = function(){
 
     scene.add(directionalLight)
     scene.add( new THREE.AmbientLight( 0xffffff ) );
-    scene.add(biliard())
+
+    object_container["billiard"] = biliard()
+    object_container["billiard"].position.x  = 10;
+    object_container["billiard"].scale.set(2, 2, 2)
+    scene.add(object_container["billiard"]);
+    bar(scene, object_container);
 }
 
 function handleResize() {

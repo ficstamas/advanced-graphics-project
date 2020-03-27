@@ -21,3 +21,37 @@ var createMultiMaterialObject = function ( geometry, materials ) {
     return group;
 
 }
+
+var _load_objects = function (path, scene, object_container, name, callback) {
+    let loader = new THREE.OBJLoader();
+    loader.load(
+        // resource URL
+        path,
+        // called when resource is loaded
+        function ( object ) {
+            object_container[name] = object;
+            
+            object.traverse(function (child) {
+                if (child instanceof THREE.Mesh) {
+                    child.material.side = THREE.DoubleSide;
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+            scene.add(object);
+            callback(object);
+        },
+        // called when loading is in progresses
+        function ( xhr ) {
+    
+            console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    
+        },
+        // called when loading has errors
+        function ( error ) {
+    
+            console.log( 'An error happened' );
+    
+        }
+    );
+}
