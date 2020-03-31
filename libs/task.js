@@ -2,6 +2,7 @@ var renderer;
 var scene, camera, controls, effect;
 var init_complated = false;
 var object_container = {};
+var isTweening = false, isTweening2 = false;
 
 var init = function () {
     
@@ -76,11 +77,17 @@ var init_objects = function(){
     object_container["floor"] = new THREE.Mesh(floor, floor_material);
     object_container["floor"].position.set(6, -2.25, -1.5);
 
-
-
     scene.add(object_container["wall_1"]);
     scene.add(object_container["wall_2"]);
     scene.add(object_container["floor"]);
+
+    // Ball
+    let ball_material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+    let ball = new THREE.SphereGeometry(0.15, 32, 32);
+    object_container["ball"] = new THREE.Mesh(ball, ball_material);
+    object_container["ball"].position.set(10, 4, 0);
+
+    scene.add(object_container["ball"])
 }
 
 function handleResize() {
@@ -95,8 +102,53 @@ var animate = function () {
     if(!init_complated)
         return;
 
+    bounceBall(object_container["ball"], 0, 2.2, 5000);
+    moveBall(object_container["ball"], 0, 3, 5000)
+
     controls.update();
 
     effect.render( scene, camera );
+    TWEEN.update();
 };
+
+function bounceBall(object, start, end, time) {
+    if (!isTweening) {
+        let original = object.position.y
+        let tween = new TWEEN.Tween({ x: start, object: object, previous: 0})
+            .to({ x: end }, time )
+            .easing(TWEEN.Easing.Bounce.Out)
+            .onStart(function () {
+                isTweening = true;
+            })
+            .onUpdate(function () {
+                object.position.y = original - this.x;
+            })
+            .onComplete(function () {
+                object.position.set(10, 4, 0);
+                isTweening = false;
+            })
+            .start();
+    }
+}
+
+function moveBall(object, start, end, time) {
+    if (!isTweening2) {
+        let original = object.position.x
+        let tween = new TWEEN.Tween({ x: start, object: object, previous: 0})
+            .to({ x: end }, time )
+            .easing(TWEEN.Easing.Linear.None)
+            .onStart(function () {
+                isTweening2 = true;
+            })
+            .onUpdate(function () {
+                object.position.x = original + this.x;
+            })
+            .onComplete(function () {
+                object.position.set(10, 4, 0);
+                isTweening2 = false;
+            })
+            .start();
+    }
+}
+
 animate();
