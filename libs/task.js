@@ -58,9 +58,9 @@ var init_objects = function(){
     wall_texture.repeat.set(8, 4);
     let wall_material = new THREE.MeshBasicMaterial( { map: wall_texture } );
 
-    let wall_1 = new THREE.BoxGeometry(0.5, 12, 30);
+    let wall_1 = new THREE.BoxGeometry(0.5, 12, 70);
     object_container["wall_1"] = new THREE.Mesh(wall_1, wall_material);
-    object_container["wall_1"].position.set(-6.25, 4.0, -1.5);
+    object_container["wall_1"].position.set(-6.25, 4.0, -21.5);
 
     let wall_2 = new THREE.BoxGeometry(25, 12, 0.5);
     object_container["wall_2"] = new THREE.Mesh(wall_2, wall_material);
@@ -70,12 +70,12 @@ var init_objects = function(){
     let floor_texture = new THREE.TextureLoader().load('assets/textures/floor.png');
     floor_texture.wrapS = THREE.RepeatWrapping;
     floor_texture.wrapT = THREE.RepeatWrapping;
-    floor_texture.repeat.set(4, 6);
+    floor_texture.repeat.set(4, 12);
     let floor_material = new THREE.MeshBasicMaterial( { map: floor_texture } );
 
-    let floor = new THREE.BoxGeometry(25, 0.5, 30);
+    let floor = new THREE.BoxGeometry(25, 0.5, 70);
     object_container["floor"] = new THREE.Mesh(floor, floor_material);
-    object_container["floor"].position.set(6, -2.25, -1.5);
+    object_container["floor"].position.set(6, -2.25, -21.5);
 
     scene.add(object_container["wall_1"]);
     scene.add(object_container["wall_2"]);
@@ -88,6 +88,10 @@ var init_objects = function(){
     object_container["ball"].position.set(10, 4, 0);
 
     scene.add(object_container["ball"])
+   
+    let boxes = build_boxes();
+    boxes.position.z = -20;
+    scene.add(boxes);
 }
 
 function handleResize() {
