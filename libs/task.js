@@ -1,5 +1,5 @@
 var renderer;
-var scene, camera, controls, effect;
+var scene, camera, controls, effect, cubeCamera;
 var init_complated = false;
 var object_container = {};
 var isTweening = false, isTweening2 = false;
@@ -10,6 +10,11 @@ var init = function () {
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
     camera.position.set(10, 10, 10)
 
+    cubeCamera = new THREE.CubeCamera(0.1, 100, 1024); 
+    cubeCamera.position.y = 5;
+    cubeCamera.position.z = -2;
+    scene.add(cubeCamera);
+
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.shadowMap.enabled = true;
@@ -19,15 +24,18 @@ var init = function () {
     document.body.appendChild( renderer.domElement );
 
 
-    controls = new THREE.TrackballControls( camera, renderer.domElement );
+    //controls = new THREE.TrackballControls( camera, renderer.domElement );
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
 
     window.addEventListener('resize', handleResize, false);
+    scene.fog = new THREE.FogExp2( 0x111111, 0.01 );
 
     camera.position.z = 8;
     controls.update();
 
     init_objects();
     init_complated = true;
+    cubeCamera.updateCubeMap(renderer, scene);
 }
 
 var init_objects = function(){
@@ -92,6 +100,13 @@ var init_objects = function(){
     let boxes = build_boxes();
     boxes.position.z = -20;
     scene.add(boxes);
+    object_container["particle_system"] = build_rain_particles();
+    scene.add(object_container["particle_system"][0]);
+
+    object_container["mirror"] = build_mirror();
+    object_container["mirror"].position.z = 13.2;
+    cubeCamera.position = object_container["mirror"].position;
+    scene.add(object_container["mirror"]);
 }
 
 function handleResize() {
@@ -106,6 +121,9 @@ var animate = function () {
     if(!init_complated)
         return;
 
+    cubeCamera.updateCubeMap(renderer, scene);
+    object_container["particle_system"][0].rotation.y += 0.0015;
+    simulateRain(object_container["particle_system"][1], object_container["particle_system"][2]);
     bounceBall(object_container["ball"], 0, 2.2, 5000);
     moveBall(object_container["ball"], 0, 3, 5000)
 
